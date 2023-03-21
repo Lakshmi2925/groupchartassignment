@@ -8,19 +8,20 @@ const app = express();
 
 // Load environment variables
 dotenv.config();
+const secret = process.env.JWT_SECRET;
 
 // Set up middleware
 app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose
-  .connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log('Connected to MongoDB'))
-  .catch((err) => console.error(err));
+mongoose.connect('mongodb+srv://lakshmi:Lakshmi29@cluster0.4gxjefb.mongodb.net/?retryWrites=true&w=majority', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  rejectUnauthorized: false
+})
+.then(() => console.log('Connected to MongoDB'))
+.catch(error => console.error('Error connecting to MongoDB', error));
 
 // Set up routes
 app.use('/api/auth', require('./routes/auth'));

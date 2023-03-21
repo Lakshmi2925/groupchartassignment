@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function ChatWindow() {
   const [messages, setMessages] = useState([]);
   const [messageInput, setMessageInput] = useState('');
+  const navigate = useNavigate()
 
   const handleInputChange = (event) => {
     setMessageInput(event.target.value);
@@ -19,12 +21,23 @@ function ChatWindow() {
       sender: 'Me',
       timestamp: new Date(),
     };
-    axios.post("https://localhost:3000/api/messages/:groupId", {newMessage})
+    axios.post("http://localhost:3000/api/messages/:groupId", {newMessage})
     setMessages([...messages, newMessage]);
     setMessageInput('');
   };
+  const handlelogout = () => {
+    axios.post("http://localhost:3000/api/auth/logout").then((response) => {
+      if (response.status === 200 ) {
+        
+        navigate('/login');
+
+      }
+    })
+    
+  }
 
   return (
+    <>
     <div className="chat-window">
       <div className="chat-messages">
         {messages.map((message, index) => (
@@ -40,6 +53,12 @@ function ChatWindow() {
         <button type="submit">Send</button>
       </form>
     </div>
+    <div>
+        <button
+          className='form-submit-button '
+          onClick={handlelogout}>Log out</button>
+      </div>
+    </>
   );
 }
 
